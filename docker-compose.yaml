@@ -42,7 +42,7 @@ services:
       MYSQL_DOCKER_OPTION: "--default-authentication-plugin=mysql_native_password"
     healthcheck:
       test: "mysqladmin ping --silent -u$${MYSQL_USER} -p$${MYSQL_PASSWORD}"
-    restart: on-failure
+    restart: unless-stopped
     depends_on:
       init:
         condition: service_completed_successfully
@@ -54,7 +54,7 @@ services:
     hostname: mail
     ports:
       - 8025:8025
-    restart: on-failure
+    restart: unless-stopped
     networks:
       - frontend
       - backend
@@ -64,7 +64,7 @@ services:
     hostname: php-fpm
     # healthcheck:
       # test: "php-fpm-healthcheck"
-    restart: on-failure
+    restart: unless-stopped
     command: php-fpm
     << : *default-volume
     << : *default-environment
@@ -81,7 +81,7 @@ services:
       - 80:80
     # healthcheck:
       # test: "curl -s --connect-timeout 5 -o /dev/null http://localhost/health"
-    restart: on-failure
+    restart: unless-stopped
     command: nginx
     depends_on:
       - "php-fpm"
@@ -97,7 +97,7 @@ services:
     image: ${ORO_IMAGE-docker.io/oroinc/commerce-crm-application}:${ORO_APP_VERSION-latest}
     hostname: ws
     user: ${USER_RUNTIME:-www-data}
-    restart: on-failure
+    restart: unless-stopped
     init: true
     command: ws
     depends_on:
@@ -112,7 +112,7 @@ services:
     image: ${ORO_IMAGE-docker.io/oroinc/commerce-crm-application}:${ORO_APP_VERSION-latest}
     hostname: consumer
     user: ${USER_RUNTIME:-www-data}
-    restart: on-failure
+    restart: unless-stopped
     init: true
     command: consumer
     depends_on:
@@ -125,7 +125,7 @@ services:
   cron:
     image: ${ORO_IMAGE-docker.io/oroinc/commerce-crm-application}:${ORO_APP_VERSION-latest}
     hostname: cron
-    restart: on-failure
+    restart: unless-stopped
     command: cron
     depends_on:
       - "php-fpm"
