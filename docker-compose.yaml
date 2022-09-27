@@ -77,8 +77,6 @@ services:
   nginx:
     image: ${ORO_IMAGE-docker.io/oroinc/commerce-crm-application}:${ORO_APP_VERSION-latest}
     hostname: nginx
-    ports:
-      - 80:80
     # healthcheck:
       # test: "curl -s --connect-timeout 5 -o /dev/null http://localhost/health"
     restart: unless-stopped
@@ -142,4 +140,6 @@ volumes:
 
 networks:
   frontend:
+    external:
+      name: galileo-proxy
   backend:
