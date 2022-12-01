@@ -46,6 +46,8 @@ services:
     depends_on:
       init:
         condition: service_completed_successfully
+    ports:
+      - 3307:3306
     networks:
       - backend
 
